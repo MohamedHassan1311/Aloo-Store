@@ -1,0 +1,121 @@
+{
+  "project_info": {
+    "project_number": "411982230211",
+    "project_id": "aloo-flutter",
+    "storage_bucket": "aloo-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411982230211:android:57e7524c939a0f678d2876",
+        "android_client_info": {
+          "package_name": "com.aloo.driverapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411982230211-m7pslrktkegc5q7rmi4n1p2970c1bbd2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aloo.driverapp",
+            "certificate_hash": "bbf20eb0726e9d9906b9bbb5bed70042eb0202a7"
+          }
+        },
+        {
+          "client_id": "411982230211-6j5tf7daeqrckph93ddmm52reh994o17.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXCcDhn8MlFe5Z2V-XLkZsjOyKfy0hHfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411982230211-6j5tf7daeqrckph93ddmm52reh994o17.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411982230211:android:13fd5abd63d438218d2876",
+        "android_client_info": {
+          "package_name": "com.aloo.storeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411982230211-btqu2ta02ef15blk8t09em3vr0uj7n90.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aloo.storeapp",
+            "certificate_hash": "bbf20eb0726e9d9906b9bbb5bed70042eb0202a7"
+          }
+        },
+        {
+          "client_id": "411982230211-6j5tf7daeqrckph93ddmm52reh994o17.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXCcDhn8MlFe5Z2V-XLkZsjOyKfy0hHfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411982230211-6j5tf7daeqrckph93ddmm52reh994o17.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411982230211:android:9c4503944c08c7ea8d2876",
+        "android_client_info": {
+          "package_name": "com.aloo.userapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411982230211-j10itghtb3tco6esch4h0ag3otngpsv6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aloo.userapp",
+            "certificate_hash": "bbf20eb0726e9d9906b9bbb5bed70042eb0202a7"
+          }
+        },
+        {
+          "client_id": "411982230211-6j5tf7daeqrckph93ddmm52reh994o17.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXCcDhn8MlFe5Z2V-XLkZsjOyKfy0hHfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411982230211-6j5tf7daeqrckph93ddmm52reh994o17.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
