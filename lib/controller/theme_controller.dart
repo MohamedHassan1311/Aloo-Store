@@ -1,4 +1,4 @@
-import 'package:sixam_mart_store/util/app_constants.dart';
+import 'package:aloo_store/util/app_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';

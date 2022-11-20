@@ -1,22 +1,22 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:sixam_mart_store/controller/addon_controller.dart';
-import 'package:sixam_mart_store/controller/auth_controller.dart';
-import 'package:sixam_mart_store/controller/splash_controller.dart';
-import 'package:sixam_mart_store/data/api/api_checker.dart';
-import 'package:sixam_mart_store/data/model/response/attr.dart';
-import 'package:sixam_mart_store/data/model/response/category_model.dart';
-import 'package:sixam_mart_store/data/model/response/item_model.dart';
-import 'package:sixam_mart_store/data/model/response/attribute_model.dart';
-import 'package:sixam_mart_store/data/model/response/profile_model.dart';
-import 'package:sixam_mart_store/data/model/response/review_model.dart';
-import 'package:sixam_mart_store/data/model/response/unit_model.dart';
-import 'package:sixam_mart_store/data/model/response/variant_type_model.dart';
-import 'package:sixam_mart_store/data/repository/store_repo.dart';
-import 'package:sixam_mart_store/helper/network_info.dart';
-import 'package:sixam_mart_store/helper/route_helper.dart';
-import 'package:sixam_mart_store/view/base/custom_snackbar.dart';
+import 'package:aloo_store/controller/addon_controller.dart';
+import 'package:aloo_store/controller/auth_controller.dart';
+import 'package:aloo_store/controller/splash_controller.dart';
+import 'package:aloo_store/data/api/api_checker.dart';
+import 'package:aloo_store/data/model/response/attr.dart';
+import 'package:aloo_store/data/model/response/category_model.dart';
+import 'package:aloo_store/data/model/response/item_model.dart';
+import 'package:aloo_store/data/model/response/attribute_model.dart';
+import 'package:aloo_store/data/model/response/profile_model.dart';
+import 'package:aloo_store/data/model/response/review_model.dart';
+import 'package:aloo_store/data/model/response/unit_model.dart';
+import 'package:aloo_store/data/model/response/variant_type_model.dart';
+import 'package:aloo_store/data/repository/store_repo.dart';
+import 'package:aloo_store/helper/network_info.dart';
+import 'package:aloo_store/helper/route_helper.dart';
+import 'package:aloo_store/view/base/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -97,7 +97,7 @@ class StoreController extends GetxController implements GetxService {
   int get durationIndex => _durationIndex;
 
   Future<void> getItemList(String offset, String type) async {
-    if(offset == '1') {
+    if (offset == '1') {
       _offsetList = [];
       _offset = 1;
       _type = type;
@@ -119,7 +119,7 @@ class StoreController extends GetxController implements GetxService {
         ApiChecker.checkApi(response);
       }
     } else {
-      if(isLoading) {
+      if (isLoading) {
         _isLoading = false;
         update();
       }
@@ -144,42 +144,50 @@ class StoreController extends GetxController implements GetxService {
     _totalStock = 0;
     _rawImages = [];
     _savedImages = [];
-    if(item != null) {
+    if (item != null) {
       _savedImages.addAll(item.images);
     }
     Response response = await storeRepo.getAttributeList();
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       _attributeList = [];
       response.body.forEach((attribute) {
-        if(item != null) {
+        if (item != null) {
           bool _active = item.attributes.contains(Attr.fromJson(attribute).id);
           List<String> _options = [];
-          if(_active) {
-            _options.addAll(item.choiceOptions[item.attributes.indexOf(Attr.fromJson(attribute).id)].options);
+          if (_active) {
+            _options.addAll(item
+                .choiceOptions[
+                    item.attributes.indexOf(Attr.fromJson(attribute).id)]
+                .options);
           }
           _attributeList.add(AttributeModel(
             attribute: Attr.fromJson(attribute),
             active: item.attributes.contains(Attr.fromJson(attribute).id),
-            controller: TextEditingController(), variants: _options,
+            controller: TextEditingController(),
+            variants: _options,
           ));
-        }else {
-          _attributeList.add(AttributeModel(attribute: Attr.fromJson(attribute), active: false,
-            controller: TextEditingController(), variants: [],
+        } else {
+          _attributeList.add(AttributeModel(
+            attribute: Attr.fromJson(attribute),
+            active: false,
+            controller: TextEditingController(),
+            variants: [],
           ));
         }
       });
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
-    if(Get.find<SplashController>().configModel.moduleConfig.module.addOn) {
+    if (Get.find<SplashController>().configModel.moduleConfig.module.addOn) {
       List<int> _addonsIds = await Get.find<AddonController>().getAddonList();
-      if(item != null && item.addOns != null) {
-        for(int index=0; index<item.addOns.length; index++) {
-          setSelectedAddonIndex(_addonsIds.indexOf(item.addOns[index].id), false);
+      if (item != null && item.addOns != null) {
+        for (int index = 0; index < item.addOns.length; index++) {
+          setSelectedAddonIndex(
+              _addonsIds.indexOf(item.addOns[index].id), false);
         }
       }
     }
-    if(Get.find<SplashController>().configModel.moduleConfig.module.unit) {
+    if (Get.find<SplashController>().configModel.moduleConfig.module.unit) {
       await getUnitList(item);
     }
     generateVariantTypes(item);
@@ -188,7 +196,7 @@ class StoreController extends GetxController implements GetxService {
 
   void setDiscountTypeIndex(int index, bool notify) {
     _discountTypeIndex = index;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
@@ -217,15 +225,16 @@ class StoreController extends GetxController implements GetxService {
     Response response = await storeRepo.getCategoryList();
     if (response.statusCode == 200) {
       _categoryList = [];
-      for(int index=0; index<response.body.length; index++) {
+      for (int index = 0; index < response.body.length; index++) {
         _categoryList.add(CategoryModel.fromJson(response.body[index]));
-        if(item != null) {
-          if(CategoryModel.fromJson(response.body[index]).id.toString() == item.categoryIds[0].id) {
+        if (item != null) {
+          if (CategoryModel.fromJson(response.body[index]).id.toString() ==
+              item.categoryIds[0].id) {
             _categoryIndex = index + 1;
           }
         }
       }
-      if(item != null) {
+      if (item != null) {
         await getSubCategoryList(int.parse(item.categoryIds[0].id), item);
       }
     } else {
@@ -236,15 +245,16 @@ class StoreController extends GetxController implements GetxService {
 
   Future<void> getSubCategoryList(int categoryID, Item item) async {
     _subCategoryList = null;
-    if(categoryID != 0) {
+    if (categoryID != 0) {
       _subCategoryIndex = 0;
       Response response = await storeRepo.getSubCategoryList(categoryID);
       if (response.statusCode == 200) {
         _subCategoryList = [];
-        for(int index=0; index<response.body.length; index++) {
+        for (int index = 0; index < response.body.length; index++) {
           _subCategoryList.add(CategoryModel.fromJson(response.body[index]));
-          if(item != null && item.categoryIds.length > 1) {
-            if(CategoryModel.fromJson(response.body[index]).id.toString() == item.categoryIds[1].id) {
+          if (item != null && item.categoryIds.length > 1) {
+            if (CategoryModel.fromJson(response.body[index]).id.toString() ==
+                item.categoryIds[1].id) {
               _subCategoryIndex = index + 1;
             }
           }
@@ -256,16 +266,25 @@ class StoreController extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> updateStore(Store store, String min, String max, String type) async {
+  Future<void> updateStore(
+      Store store, String min, String max, String type) async {
     _isLoading = true;
     update();
-    Response response = await storeRepo.updateStore(store, _rawLogo, _rawCover, min, max, type);
-    if(response.statusCode == 200) {
+    Response response =
+        await storeRepo.updateStore(store, _rawLogo, _rawCover, min, max, type);
+    if (response.statusCode == 200) {
       Get.back();
       Get.find<AuthController>().getProfile();
-      showCustomSnackBar(Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
-          ? 'restaurant_settings_updated_successfully'.tr : 'store_settings_updated_successfully'.tr, isError: false);
-    }else {
+      showCustomSnackBar(
+          Get.find<SplashController>()
+                  .configModel
+                  .moduleConfig
+                  .module
+                  .showRestaurantText
+              ? 'restaurant_settings_updated_successfully'.tr
+              : 'store_settings_updated_successfully'.tr,
+          isError: false);
+    } else {
       ApiChecker.checkApi(response);
     }
     _isLoading = false;
@@ -273,18 +292,20 @@ class StoreController extends GetxController implements GetxService {
   }
 
   void pickImage(bool isLogo, bool isRemove) async {
-    if(isRemove) {
+    if (isRemove) {
       _rawLogo = null;
       _rawCover = null;
-    }else {
+    } else {
       if (isLogo) {
-        XFile _pickedLogo = await ImagePicker().pickImage(source: ImageSource.gallery);
-        if(_pickedLogo != null) {
+        XFile _pickedLogo =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (_pickedLogo != null) {
           _rawLogo = await NetworkInfo.compressImage(_pickedLogo);
         }
       } else {
-        XFile _pickedCover = await ImagePicker().pickImage(source: ImageSource.gallery);
-        if(_pickedCover != null) {
+        XFile _pickedCover =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (_pickedCover != null) {
           _rawCover = await NetworkInfo.compressImage(_pickedCover);
         }
       }
@@ -293,9 +314,9 @@ class StoreController extends GetxController implements GetxService {
   }
 
   void setSelectedAddonIndex(int index, bool notify) {
-    if(!_selectedAddons.contains(index)) {
+    if (!_selectedAddons.contains(index)) {
       _selectedAddons.add(index);
-      if(notify) {
+      if (notify) {
         update();
       }
     }
@@ -310,35 +331,52 @@ class StoreController extends GetxController implements GetxService {
     _isLoading = true;
     update();
     Map<String, String> _fields = Map();
-    if(_variantTypeList.length > 0) {
+    if (_variantTypeList.length > 0) {
       List<int> _idList = [];
       List<String> _nameList = [];
       _attributeList.forEach((attributeModel) {
-        if(attributeModel.active) {
+        if (attributeModel.active) {
           _idList.add(attributeModel.attribute.id);
           _nameList.add(attributeModel.attribute.name);
           String _variantString = '';
           attributeModel.variants.forEach((variant) {
-            _variantString = _variantString + '${_variantString.isEmpty ? '' : ','}' + variant.replaceAll(' ', '');
+            _variantString = _variantString +
+                '${_variantString.isEmpty ? '' : ','}' +
+                variant.replaceAll(' ', '');
           });
-          _fields.addAll(<String, String>{'choice_options_${attributeModel.attribute.id}': jsonEncode([_variantString])});
+          _fields.addAll(<String, String>{
+            'choice_options_${attributeModel.attribute.id}':
+                jsonEncode([_variantString])
+          });
         }
       });
-      _fields.addAll(<String, String> {
-        'attribute_id': jsonEncode(_idList), 'choice_no': jsonEncode(_idList), 'choice': jsonEncode(_nameList)
+      _fields.addAll(<String, String>{
+        'attribute_id': jsonEncode(_idList),
+        'choice_no': jsonEncode(_idList),
+        'choice': jsonEncode(_nameList)
       });
-      for(int index=0; index<_variantTypeList.length; index++) {
-        _fields.addAll(<String, String> {'price_${_variantTypeList[index].variantType.replaceAll(' ', '_')}': _variantTypeList[index].priceController.text.trim(),
-          'stock_${_variantTypeList[index].variantType.replaceAll(' ', '_')}': _variantTypeList[index].stockController.text.trim().isEmpty ? '0'
-              : _variantTypeList[index].stockController.text.trim()});
+      for (int index = 0; index < _variantTypeList.length; index++) {
+        _fields.addAll(<String, String>{
+          'price_${_variantTypeList[index].variantType.replaceAll(' ', '_')}':
+              _variantTypeList[index].priceController.text.trim(),
+          'stock_${_variantTypeList[index].variantType.replaceAll(' ', '_')}':
+              _variantTypeList[index].stockController.text.trim().isEmpty
+                  ? '0'
+                  : _variantTypeList[index].stockController.text.trim()
+        });
       }
     }
-    Response response = await storeRepo.addItem(item, _rawLogo, _rawImages, _savedImages, _fields, isAdd);
-    if(response.statusCode == 200) {
+    Response response = await storeRepo.addItem(
+        item, _rawLogo, _rawImages, _savedImages, _fields, isAdd);
+    if (response.statusCode == 200) {
       Get.offAllNamed(RouteHelper.getInitialRoute());
-      showCustomSnackBar(isAdd ? 'product_added_successfully'.tr : 'product_updated_successfully'.tr, isError: false);
+      showCustomSnackBar(
+          isAdd
+              ? 'product_added_successfully'.tr
+              : 'product_updated_successfully'.tr,
+          isError: false);
       getItemList('1', 'all');
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     _isLoading = false;
@@ -349,11 +387,11 @@ class StoreController extends GetxController implements GetxService {
     _isLoading = true;
     update();
     Response response = await storeRepo.deleteItem(itemID);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Get.back();
       showCustomSnackBar('product_deleted_successfully'.tr, isError: false);
       getItemList('1', 'all');
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     _isLoading = false;
@@ -368,26 +406,28 @@ class StoreController extends GetxController implements GetxService {
     _variantTypeList = [];
     _totalStock = 0;
     _attributeList.forEach((attribute) {
-      if(attribute.active) {
+      if (attribute.active) {
         _hasData = true;
         _mainList.add(attribute.variants);
         _length = _length * attribute.variants.length;
         _indexList.add(0);
       }
     });
-    if(!_hasData) {
+    if (!_hasData) {
       _length = 0;
     }
-    for(int i=0; i<_length; i++) {
+    for (int i = 0; i < _length; i++) {
       String _value = '';
-      for(int j=0; j<_mainList.length; j++) {
-        _value = _value + '${_value.isEmpty ? '' : '-'}' + _mainList[j][_indexList[j]].trim();
+      for (int j = 0; j < _mainList.length; j++) {
+        _value = _value +
+            '${_value.isEmpty ? '' : '-'}' +
+            _mainList[j][_indexList[j]].trim();
       }
-      if(item != null) {
+      if (item != null) {
         double _price = 0;
         int _stock = 0;
-        for(Variation variation in item.variations) {
-          if(variation.type == _value) {
+        for (Variation variation in item.variations) {
+          if (variation.type == _value) {
             _price = variation.price;
             _stock = variation.stock;
             break;
@@ -395,22 +435,32 @@ class StoreController extends GetxController implements GetxService {
         }
         _totalStock = _totalStock + _stock;
         _variantTypeList.add(VariantTypeModel(
-          variantType: _value, priceController: TextEditingController(text: _price > 0 ? _price.toString() : ''), priceNode: FocusNode(),
-          stockController: TextEditingController(text: _stock > 0 ? _stock.toString() : ''), stockNode: FocusNode(),
+          variantType: _value,
+          priceController:
+              TextEditingController(text: _price > 0 ? _price.toString() : ''),
+          priceNode: FocusNode(),
+          stockController:
+              TextEditingController(text: _stock > 0 ? _stock.toString() : ''),
+          stockNode: FocusNode(),
         ));
-      }else {
+      } else {
         _variantTypeList.add(VariantTypeModel(
-          variantType: _value, priceController: TextEditingController(), priceNode: FocusNode(),
-          stockController: TextEditingController(), stockNode: FocusNode(),
+          variantType: _value,
+          priceController: TextEditingController(),
+          priceNode: FocusNode(),
+          stockController: TextEditingController(),
+          stockNode: FocusNode(),
         ));
       }
 
-      for(int j=0; j<_mainList.length; j++) {
-        if(_indexList[_indexList.length-(1+j)] < _mainList[_mainList.length-(1+j)].length-1) {
-          _indexList[_indexList.length-(1+j)] = _indexList[_indexList.length-(1+j)] + 1;
+      for (int j = 0; j < _mainList.length; j++) {
+        if (_indexList[_indexList.length - (1 + j)] <
+            _mainList[_mainList.length - (1 + j)].length - 1) {
+          _indexList[_indexList.length - (1 + j)] =
+              _indexList[_indexList.length - (1 + j)] + 1;
           break;
-        }else {
-          _indexList[_indexList.length-(1+j)] = 0;
+        } else {
+          _indexList[_indexList.length - (1 + j)] = 0;
         }
       }
     }
@@ -418,8 +468,8 @@ class StoreController extends GetxController implements GetxService {
 
   bool hasAttribute() {
     bool _hasData = false;
-    for(AttributeModel attribute in _attributeList) {
-      if(attribute.active) {
+    for (AttributeModel attribute in _attributeList) {
+      if (attribute.active) {
         _hasData = true;
         break;
       }
@@ -430,10 +480,11 @@ class StoreController extends GetxController implements GetxService {
   Future<void> getStoreReviewList(int storeID) async {
     _tabIndex = 0;
     Response response = await storeRepo.getStoreReviewList(storeID);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       _storeReviewList = [];
-      response.body.forEach((review) => _storeReviewList.add(ReviewModel.fromJson(review)));
-    }else {
+      response.body.forEach(
+          (review) => _storeReviewList.add(ReviewModel.fromJson(review)));
+    } else {
       ApiChecker.checkApi(response);
     }
     update();
@@ -442,10 +493,11 @@ class StoreController extends GetxController implements GetxService {
   Future<void> getItemReviewList(int itemID) async {
     _itemReviewList = null;
     Response response = await storeRepo.getItemReviewList(itemID);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       _itemReviewList = [];
-      response.body.forEach((review) => _itemReviewList.add(ReviewModel.fromJson(review)));
-    }else {
+      response.body.forEach(
+          (review) => _itemReviewList.add(ReviewModel.fromJson(review)));
+    } else {
       ApiChecker.checkApi(response);
     }
     update();
@@ -456,12 +508,13 @@ class StoreController extends GetxController implements GetxService {
   }
 
   void toggleAvailable(int productID) async {
-    Response response = await storeRepo.updateItemStatus(productID, _isAvailable ? 0 : 1);
-    if(response.statusCode == 200) {
+    Response response =
+        await storeRepo.updateItemStatus(productID, _isAvailable ? 0 : 1);
+    if (response.statusCode == 200) {
       getItemList('1', 'all');
       _isAvailable = !_isAvailable;
       showCustomSnackBar('item_status_updated_successfully'.tr, isError: false);
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     update();
@@ -475,7 +528,6 @@ class StoreController extends GetxController implements GetxService {
     _scheduleList.addAll(store.schedules);
     _isStoreVeg = store.veg == 1;
     _isStoreNonVeg = store.nonVeg == 1;
-
   }
 
   void toggleGst() {
@@ -489,12 +541,12 @@ class StoreController extends GetxController implements GetxService {
     _scheduleLoading = true;
     update();
     Response response = await storeRepo.addSchedule(schedule);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       schedule.id = int.parse(response.body['id'].toString());
       _scheduleList.add(schedule);
       Get.back();
       showCustomSnackBar('schedule_added_successfully'.tr, isError: false);
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     _scheduleLoading = false;
@@ -505,11 +557,11 @@ class StoreController extends GetxController implements GetxService {
     _scheduleLoading = true;
     update();
     Response response = await storeRepo.deleteSchedule(scheduleID);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       _scheduleList.removeWhere((schedule) => schedule.id == scheduleID);
       Get.back();
       showCustomSnackBar('schedule_removed_successfully'.tr, isError: false);
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     _scheduleLoading = false;
@@ -518,32 +570,32 @@ class StoreController extends GetxController implements GetxService {
 
   void setTabIndex(int index) {
     bool _notify = true;
-    if(_tabIndex == index) {
+    if (_tabIndex == index) {
       _notify = false;
     }
     _tabIndex = index;
-    if(_notify) {
+    if (_notify) {
       update();
     }
   }
 
   void setVeg(bool isVeg, bool notify) {
     _isVeg = isVeg;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
 
   void setStoreVeg(bool isVeg, bool notify) {
     _isStoreVeg = isVeg;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
 
   void setStoreNonVeg(bool isNonVeg, bool notify) {
     _isStoreNonVeg = isNonVeg;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
@@ -551,17 +603,17 @@ class StoreController extends GetxController implements GetxService {
   Future<void> getUnitList(Item item) async {
     _unitIndex = 0;
     Response response = await storeRepo.getUnitList();
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       _unitList = [];
-      for(int index=0; index<response.body.length; index++) {
+      for (int index = 0; index < response.body.length; index++) {
         _unitList.add(UnitModel.fromJson(response.body[index]));
-        if(item != null) {
+        if (item != null) {
           if (UnitModel.fromJson(response.body[index]).unit == item.unitType) {
             _unitIndex = index + 1;
           }
         }
       }
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     update();
@@ -569,14 +621,16 @@ class StoreController extends GetxController implements GetxService {
 
   void setTotalStock() {
     _totalStock = 0;
-    _variantTypeList.forEach((variant) => _totalStock = variant.stockController.text.trim().isNotEmpty
-        ? _totalStock + int.parse(variant.stockController.text.trim()) : _totalStock);
+    _variantTypeList.forEach((variant) => _totalStock =
+        variant.stockController.text.trim().isNotEmpty
+            ? _totalStock + int.parse(variant.stockController.text.trim())
+            : _totalStock);
     update();
   }
 
   void pickImages() async {
     XFile _xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if(_xFile != null) {
+    if (_xFile != null) {
       _rawImages.add(await NetworkInfo.compressImage(_xFile));
     }
     update();
@@ -594,37 +648,36 @@ class StoreController extends GetxController implements GetxService {
 
   void setImageIndex(int index, bool notify) {
     _imageIndex = index;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
 
   void setCategoryIndex(int index, bool notify) {
     _categoryIndex = index;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
 
   void setSubCategoryIndex(int index, bool notify) {
     _subCategoryIndex = index;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
 
   void setUnitIndex(int index, bool notify) {
     _unitIndex = index;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
 
   void setDurationType(int index, bool notify) {
     _durationIndex = index;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
-
 }

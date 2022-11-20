@@ -1,7 +1,7 @@
-import 'package:sixam_mart_store/data/api/api_checker.dart';
-import 'package:sixam_mart_store/data/model/response/item_model.dart';
-import 'package:sixam_mart_store/data/repository/addon_repo.dart';
-import 'package:sixam_mart_store/view/base/custom_snackbar.dart';
+import 'package:aloo_store/data/api/api_checker.dart';
+import 'package:aloo_store/data/model/response/item_model.dart';
+import 'package:aloo_store/data/repository/addon_repo.dart';
+import 'package:aloo_store/view/base/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,13 +18,13 @@ class AddonController extends GetxController implements GetxService {
   Future<List<int>> getAddonList() async {
     Response response = await addonRepo.getAddonList();
     List<int> _addonsIds = [];
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       _addonList = [];
       response.body.forEach((addon) {
         _addonList.add(AddOns.fromJson(addon));
         _addonsIds.add(AddOns.fromJson(addon).id);
       });
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     update();
@@ -35,11 +35,11 @@ class AddonController extends GetxController implements GetxService {
     _isLoading = true;
     update();
     Response response = await addonRepo.addAddon(addonModel);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Get.back();
       showCustomSnackBar('addon_added_successfully'.tr, isError: false);
       getAddonList();
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     _isLoading = false;
@@ -50,11 +50,11 @@ class AddonController extends GetxController implements GetxService {
     _isLoading = true;
     update();
     Response response = await addonRepo.updateAddon(addonModel);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Get.back();
       showCustomSnackBar('addon_updated_successfully'.tr, isError: false);
       getAddonList();
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     _isLoading = false;
@@ -65,15 +65,14 @@ class AddonController extends GetxController implements GetxService {
     _isLoading = true;
     update();
     Response response = await addonRepo.deleteAddon(addonID);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Get.back();
       showCustomSnackBar('addon_removed_successfully'.tr, isError: false);
       getAddonList();
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     _isLoading = false;
     update();
   }
-
 }

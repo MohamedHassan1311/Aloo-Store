@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
-import 'package:sixam_mart_store/controller/splash_controller.dart';
-import 'package:sixam_mart_store/data/api/api_checker.dart';
-import 'package:sixam_mart_store/data/model/response/profile_model.dart';
-import 'package:sixam_mart_store/data/model/response/response_model.dart';
-import 'package:sixam_mart_store/data/repository/auth_repo.dart';
-import 'package:sixam_mart_store/helper/network_info.dart';
-import 'package:sixam_mart_store/helper/route_helper.dart';
-import 'package:sixam_mart_store/view/base/custom_snackbar.dart';
+import 'package:aloo_store/controller/splash_controller.dart';
+import 'package:aloo_store/data/api/api_checker.dart';
+import 'package:aloo_store/data/model/response/profile_model.dart';
+import 'package:aloo_store/data/model/response/response_model.dart';
+import 'package:aloo_store/data/repository/auth_repo.dart';
+import 'package:aloo_store/helper/network_info.dart';
+import 'package:aloo_store/helper/route_helper.dart';
+import 'package:aloo_store/view/base/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,7 +15,7 @@ import 'package:image_picker/image_picker.dart';
 class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
   AuthController({@required this.authRepo}) {
-   _notification = authRepo.isNotificationActive();
+    _notification = authRepo.isNotificationActive();
   }
 
   bool _isLoading = false;
@@ -34,7 +34,8 @@ class AuthController extends GetxController implements GetxService {
     Response response = await authRepo.login(email, password);
     ResponseModel responseModel;
     if (response.statusCode == 200) {
-      authRepo.saveUserToken(response.body['token'], response.body['zone_wise_topic']);
+      authRepo.saveUserToken(
+          response.body['token'], response.body['zone_wise_topic']);
       await authRepo.updateToken();
       responseModel = ResponseModel(true, 'successful');
     } else {
@@ -49,7 +50,8 @@ class AuthController extends GetxController implements GetxService {
     Response response = await authRepo.getProfileInfo();
     if (response.statusCode == 200) {
       _profileModel = ProfileModel.fromJson(response.body);
-      Get.find<SplashController>().setModule(_profileModel.stores[0].module.id, _profileModel.stores[0].module.moduleType);
+      Get.find<SplashController>().setModule(_profileModel.stores[0].module.id,
+          _profileModel.stores[0].module.moduleType);
       authRepo.updateHeader(_profileModel.stores[0].module.id);
       authRepo.saveVendorID(_profileModel.stores[0].vendorId.toString());
     } else {
@@ -58,10 +60,12 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
-  Future<bool> updateUserInfo(ProfileModel updateUserModel, String token) async {
+  Future<bool> updateUserInfo(
+      ProfileModel updateUserModel, String token) async {
     _isLoading = true;
     update();
-    Response response = await authRepo.updateProfile(updateUserModel, _pickedFile, token);
+    Response response =
+        await authRepo.updateProfile(updateUserModel, _pickedFile, token);
     _isLoading = false;
     bool _isSuccess;
     if (response.statusCode == 200) {
@@ -78,17 +82,19 @@ class AuthController extends GetxController implements GetxService {
 
   void pickImage() async {
     XFile _picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if(_picked != null) {
+    if (_picked != null) {
       _pickedFile = await NetworkInfo.compressImage(_picked);
     }
     update();
   }
 
-  Future<bool> changePassword(ProfileModel updatedUserModel, String password) async {
+  Future<bool> changePassword(
+      ProfileModel updatedUserModel, String password) async {
     _isLoading = true;
     update();
     bool _isSuccess;
-    Response response = await authRepo.changePassword(updatedUserModel, password);
+    Response response =
+        await authRepo.changePassword(updatedUserModel, password);
     _isLoading = false;
     if (response.statusCode == 200) {
       Get.back();
@@ -137,10 +143,12 @@ class AuthController extends GetxController implements GetxService {
     return responseModel;
   }
 
-  Future<ResponseModel> resetPassword(String resetToken, String email, String password, String confirmPassword) async {
+  Future<ResponseModel> resetPassword(String resetToken, String email,
+      String password, String confirmPassword) async {
     _isLoading = true;
     update();
-    Response response = await authRepo.resetPassword(resetToken, email, password, confirmPassword);
+    Response response = await authRepo.resetPassword(
+        resetToken, email, password, confirmPassword);
     ResponseModel responseModel;
     if (response.statusCode == 200) {
       responseModel = ResponseModel(true, response.body["message"]);
@@ -160,7 +168,6 @@ class AuthController extends GetxController implements GetxService {
     _verificationCode = query;
     update();
   }
-
 
   bool _isActiveRememberMe = false;
 
@@ -187,6 +194,7 @@ class AuthController extends GetxController implements GetxService {
   String getUserNumber() {
     return authRepo.getUserNumber() ?? "";
   }
+
   String getUserPassword() {
     return authRepo.getUserPassword() ?? "";
   }
@@ -226,13 +234,12 @@ class AuthController extends GetxController implements GetxService {
     Response response = await authRepo.deleteVendor();
     _isLoading = false;
     if (response.statusCode == 200) {
-      showCustomSnackBar('your_account_remove_successfully'.tr,isError: false);
+      showCustomSnackBar('your_account_remove_successfully'.tr, isError: false);
       Get.find<AuthController>().clearSharedData();
       Get.offAllNamed(RouteHelper.getSignInRoute());
-    }else{
+    } else {
       Get.back();
       ApiChecker.checkApi(response);
     }
   }
-
 }

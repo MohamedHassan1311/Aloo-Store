@@ -1,12 +1,12 @@
-import 'package:sixam_mart_store/controller/auth_controller.dart';
-import 'package:sixam_mart_store/helper/route_helper.dart';
-import 'package:sixam_mart_store/util/dimensions.dart';
-import 'package:sixam_mart_store/util/images.dart';
-import 'package:sixam_mart_store/util/styles.dart';
-import 'package:sixam_mart_store/view/base/custom_app_bar.dart';
-import 'package:sixam_mart_store/view/base/custom_button.dart';
-import 'package:sixam_mart_store/view/base/custom_snackbar.dart';
-import 'package:sixam_mart_store/view/base/custom_text_field.dart';
+import 'package:aloo_store/controller/auth_controller.dart';
+import 'package:aloo_store/helper/route_helper.dart';
+import 'package:aloo_store/util/dimensions.dart';
+import 'package:aloo_store/util/images.dart';
+import 'package:aloo_store/util/styles.dart';
+import 'package:aloo_store/view/base/custom_app_bar.dart';
+import 'package:aloo_store/view/base/custom_button.dart';
+import 'package:aloo_store/view/base/custom_snackbar.dart';
+import 'package:aloo_store/view/base/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,32 +22,38 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'forgot_password'.tr),
-      body: SafeArea(child: Center(child: Scrollbar(child: SingleChildScrollView(
+      body: SafeArea(
+          child: Center(
+              child: Scrollbar(
+                  child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-        child: Center(child: SizedBox(width: 1170, child: Column(children: [
-
-          Text('please_enter_email'.tr, style: robotoRegular, textAlign: TextAlign.center),
-          SizedBox(height: 50),
-
-          CustomTextField(
-            controller: _emailController,
-            inputType: TextInputType.emailAddress,
-            inputAction: TextInputAction.done,
-            hintText: 'email'.tr,
-            prefixIcon: Images.mail,
-            onSubmit: (text) => GetPlatform.isWeb ? _forgetPass() : null,
-          ),
-          SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-          GetBuilder<AuthController>(builder: (authController) {
-            return !authController.isLoading ? CustomButton(
-              buttonText: 'next'.tr,
-              onPressed: () => _forgetPass(),
-            ) : Center(child: CircularProgressIndicator());
-          }),
-
-        ]))),
+        child: Center(
+            child: SizedBox(
+                width: 1170,
+                child: Column(children: [
+                  Text('please_enter_email'.tr,
+                      style: robotoRegular, textAlign: TextAlign.center),
+                  SizedBox(height: 50),
+                  CustomTextField(
+                    controller: _emailController,
+                    inputType: TextInputType.emailAddress,
+                    inputAction: TextInputAction.done,
+                    hintText: 'email'.tr,
+                    prefixIcon: Images.mail,
+                    onSubmit: (text) =>
+                        GetPlatform.isWeb ? _forgetPass() : null,
+                  ),
+                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                  GetBuilder<AuthController>(builder: (authController) {
+                    return !authController.isLoading
+                        ? CustomButton(
+                            buttonText: 'next'.tr,
+                            onPressed: () => _forgetPass(),
+                          )
+                        : Center(child: CircularProgressIndicator());
+                  }),
+                ]))),
       )))),
     );
   }
@@ -56,13 +62,13 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
     String _email = _emailController.text.trim();
     if (_email.isEmpty) {
       showCustomSnackBar('enter_email_address'.tr);
-    }else if (!GetUtils.isEmail(_email)) {
+    } else if (!GetUtils.isEmail(_email)) {
       showCustomSnackBar('enter_a_valid_email_address'.tr);
-    }else {
+    } else {
       Get.find<AuthController>().forgetPassword(_email).then((status) async {
         if (status.isSuccess) {
           Get.toNamed(RouteHelper.getVerificationRoute(_email));
-        }else {
+        } else {
           showCustomSnackBar(status.message);
         }
       });

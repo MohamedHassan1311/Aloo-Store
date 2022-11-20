@@ -1,12 +1,12 @@
-import 'package:sixam_mart_store/controller/auth_controller.dart';
-import 'package:sixam_mart_store/controller/splash_controller.dart';
-import 'package:sixam_mart_store/data/api/api_checker.dart';
-import 'package:sixam_mart_store/data/model/body/update_status_body.dart';
-import 'package:sixam_mart_store/data/model/response/order_details_model.dart';
-import 'package:sixam_mart_store/data/model/response/order_model.dart';
-import 'package:sixam_mart_store/data/model/response/running_order_model.dart';
-import 'package:sixam_mart_store/data/repository/order_repo.dart';
-import 'package:sixam_mart_store/view/base/custom_snackbar.dart';
+import 'package:aloo_store/controller/auth_controller.dart';
+import 'package:aloo_store/controller/splash_controller.dart';
+import 'package:aloo_store/data/api/api_checker.dart';
+import 'package:aloo_store/data/model/body/update_status_body.dart';
+import 'package:aloo_store/data/model/response/order_details_model.dart';
+import 'package:aloo_store/data/model/response/order_model.dart';
+import 'package:aloo_store/data/model/response/running_order_model.dart';
+import 'package:aloo_store/data/repository/order_repo.dart';
+import 'package:aloo_store/view/base/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -51,7 +51,7 @@ class OrderController extends GetxController implements GetxService {
   Future<void> getAllOrders() async {
     _historyIndex = 0;
     Response response = await orderRepo.getAllOrders();
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       _allOrderList = [];
       _orderList = [];
       response.body.forEach((order) {
@@ -59,7 +59,7 @@ class OrderController extends GetxController implements GetxService {
         _allOrderList.add(_orderModel);
         _orderList.add(_orderModel);
       });
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     update();
@@ -67,13 +67,20 @@ class OrderController extends GetxController implements GetxService {
 
   Future<void> getCurrentOrders() async {
     Response response = await orderRepo.getCurrentOrders();
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       _runningOrderList = [];
       _runningOrders = [
         RunningOrderModel(status: 'pending', orderList: []),
         RunningOrderModel(status: 'confirmed', orderList: []),
-        RunningOrderModel(status: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
-            ? 'cooking' : 'processing', orderList: []),
+        RunningOrderModel(
+            status: Get.find<SplashController>()
+                    .configModel
+                    .moduleConfig
+                    .module
+                    .showRestaurantText
+                ? 'cooking'
+                : 'processing',
+            orderList: []),
         RunningOrderModel(status: 'ready_for_handover', orderList: []),
         RunningOrderModel(status: 'food_on_the_way', orderList: []),
       ];
@@ -83,7 +90,7 @@ class OrderController extends GetxController implements GetxService {
       });
       _campaignOnly = true;
       toggleCampaignOnly();
-    }else {
+    } else {
       ApiChecker.checkApi(response);
     }
     update();
@@ -104,22 +111,24 @@ class OrderController extends GetxController implements GetxService {
   // }
 
   Future<void> getPaginatedOrders(int offset, bool reload) async {
-    if(offset == 1 || reload) {
+    if (offset == 1 || reload) {
       _offsetList = [];
       _offset = 1;
-      if(reload) {
+      if (reload) {
         _historyOrderList = null;
       }
       update();
     }
     if (!_offsetList.contains(offset)) {
       _offsetList.add(offset);
-      Response response = await orderRepo.getPaginatedOrderList(offset, _statusList[_historyIndex]);
+      Response response = await orderRepo.getPaginatedOrderList(
+          offset, _statusList[_historyIndex]);
       if (response.statusCode == 200) {
         if (offset == 1) {
           _historyOrderList = [];
         }
-        _historyOrderList.addAll(PaginatedOrderModel.fromJson(response.body).orders);
+        _historyOrderList
+            .addAll(PaginatedOrderModel.fromJson(response.body).orders);
         _pageSize = PaginatedOrderModel.fromJson(response.body).totalSize;
         _paginate = false;
         update();
@@ -127,7 +136,7 @@ class OrderController extends GetxController implements GetxService {
         ApiChecker.checkApi(response);
       }
     } else {
-      if(_paginate) {
+      if (_paginate) {
         _paginate = false;
         update();
       }
@@ -148,25 +157,27 @@ class OrderController extends GetxController implements GetxService {
     getPaginatedOrders(1, true);
   }
 
-  Future<bool> updateOrderStatus(int orderID, String status, {bool back = false}) async {
+  Future<bool> updateOrderStatus(int orderID, String status,
+      {bool back = false}) async {
     _isLoading = true;
     update();
     UpdateStatusBody _updateStatusBody = UpdateStatusBody(
-      orderId: orderID, status: status,
+      orderId: orderID,
+      status: status,
       otp: status == 'delivered' ? _otp : null,
     );
     Response response = await orderRepo.updateOrderStatus(_updateStatusBody);
     Get.back();
     bool _isSuccess;
-    if(response.statusCode == 200) {
-      if(back) {
+    if (response.statusCode == 200) {
+      if (back) {
         Get.back();
       }
       getCurrentOrders();
       Get.find<AuthController>().getProfile();
       showCustomSnackBar(response.body['message'], isError: false);
       _isSuccess = true;
-    }else {
+    } else {
       ApiChecker.checkApi(response);
       _isSuccess = false;
     }
@@ -178,10 +189,11 @@ class OrderController extends GetxController implements GetxService {
   Future<void> getOrderDetails(int orderID) async {
     _orderDetailsModel = null;
     Response response = await orderRepo.getOrderDetails(orderID);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       _orderDetailsModel = [];
-      response.body.forEach((orderDetails) => _orderDetailsModel.add(OrderDetailsModel.fromJson(orderDetails)));
-    }else {
+      response.body.forEach((orderDetails) =>
+          _orderDetailsModel.add(OrderDetailsModel.fromJson(orderDetails)));
+    } else {
       ApiChecker.checkApi(response);
     }
     update();
@@ -200,19 +212,29 @@ class OrderController extends GetxController implements GetxService {
     _runningOrders[3].orderList = [];
     _runningOrders[4].orderList = [];
     _runningOrderList.forEach((order) {
-      if(order.orderStatus == 'pending' && (Get.find<SplashController>().configModel.orderConfirmationModel != 'deliveryman'
-          || order.orderType == 'take_away' || Get.find<AuthController>().profileModel.stores[0].selfDeliverySystem == 1)
-          && (_campaignOnly ? order.itemCampaign == 1 : true))
-      {
+      if (order.orderStatus == 'pending' &&
+          (Get.find<SplashController>().configModel.orderConfirmationModel !=
+                  'deliveryman' ||
+              order.orderType == 'take_away' ||
+              Get.find<AuthController>()
+                      .profileModel
+                      .stores[0]
+                      .selfDeliverySystem ==
+                  1) &&
+          (_campaignOnly ? order.itemCampaign == 1 : true)) {
         _runningOrders[0].orderList.add(order);
-      }else if((order.orderStatus == 'confirmed' || (order.orderStatus == 'accepted' && order.confirmed != null))
-          && (_campaignOnly ? order.itemCampaign == 1 : true)) {
+      } else if ((order.orderStatus == 'confirmed' ||
+              (order.orderStatus == 'accepted' && order.confirmed != null)) &&
+          (_campaignOnly ? order.itemCampaign == 1 : true)) {
         _runningOrders[1].orderList.add(order);
-      }else if(order.orderStatus == 'processing' && (_campaignOnly ? order.itemCampaign == 1 : true)) {
+      } else if (order.orderStatus == 'processing' &&
+          (_campaignOnly ? order.itemCampaign == 1 : true)) {
         _runningOrders[2].orderList.add(order);
-      }else if(order.orderStatus == 'handover' && (_campaignOnly ? order.itemCampaign == 1 : true)) {
+      } else if (order.orderStatus == 'handover' &&
+          (_campaignOnly ? order.itemCampaign == 1 : true)) {
         _runningOrders[3].orderList.add(order);
-      }else if(order.orderStatus == 'picked_up' && (_campaignOnly ? order.itemCampaign == 1 : true)) {
+      } else if (order.orderStatus == 'picked_up' &&
+          (_campaignOnly ? order.itemCampaign == 1 : true)) {
         _runningOrders[4].orderList.add(order);
       }
     });
@@ -221,7 +243,7 @@ class OrderController extends GetxController implements GetxService {
 
   void setOtp(String otp) {
     _otp = otp;
-    if(otp != '') {
+    if (otp != '') {
       update();
     }
   }

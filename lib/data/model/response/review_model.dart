@@ -1,4 +1,4 @@
-import 'package:sixam_mart_store/data/model/response/order_model.dart';
+import 'package:aloo_store/data/model/response/order_model.dart';
 
 class ReviewModel {
   int id;
@@ -13,14 +13,14 @@ class ReviewModel {
 
   ReviewModel(
       {this.id,
-        this.comment,
-        this.rating,
-        this.itemName,
-        this.itemImage,
-        this.customerName,
-        this.createdAt,
-        this.updatedAt,
-        this.customer});
+      this.comment,
+      this.rating,
+      this.itemName,
+      this.itemImage,
+      this.customerName,
+      this.createdAt,
+      this.updatedAt,
+      this.customer});
 
   ReviewModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

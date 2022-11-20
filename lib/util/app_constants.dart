@@ -1,5 +1,5 @@
-import 'package:sixam_mart_store/data/model/response/language_model.dart';
-import 'package:sixam_mart_store/util/images.dart';
+import 'package:aloo_store/data/model/response/language_model.dart';
+import 'package:aloo_store/util/images.dart';
 
 class AppConstants {
   static const String APP_NAME = 'Aloo Vendor';
@@ -67,19 +67,19 @@ class AppConstants {
   static const String VENDOR_REMOVE = '/api/v1/vendor/remove-account';
 
   // Shared Key
-  static const String THEME = '6am_mart_store_theme';
-  static const String INTRO = '6am_mart_store_intro';
-  static const String TOKEN = '6am_mart_store_token';
+  static const String THEME = 'aloo_theme';
+  static const String INTRO = 'aloo_intro';
+  static const String TOKEN = 'aloo_token';
   static const String VendorID = 'VendorID';
-  static const String COUNTRY_CODE = '6am_mart_store_country_code';
-  static const String LANGUAGE_CODE = '6am_mart_store_language_code';
-  static const String CART_LIST = '6am_mart_store_cart_list';
-  static const String USER_PASSWORD = '6am_mart_store_user_password';
-  static const String USER_ADDRESS = '6am_mart_store_user_address';
-  static const String USER_NUMBER = '6am_mart_store_user_number';
-  static const String NOTIFICATION = '6am_mart_store_notification';
-  static const String NOTIFICATION_COUNT = '6am_mart_store_notification_count';
-  static const String SEARCH_HISTORY = '6am_mart_store_search_history';
+  static const String COUNTRY_CODE = 'aloo_country_code';
+  static const String LANGUAGE_CODE = 'aloo_language_code';
+  static const String CART_LIST = 'aloo_cart_list';
+  static const String USER_PASSWORD = 'aloo_user_password';
+  static const String USER_ADDRESS = 'aloo_user_address';
+  static const String USER_NUMBER = 'aloo_user_number';
+  static const String NOTIFICATION = 'aloo_notification';
+  static const String NOTIFICATION_COUNT = 'aloo_notification_count';
+  static const String SEARCH_HISTORY = 'aloo_search_history';
 
   static const String TOPIC = 'all_zone_store';
   static const String ZONE_TOPIC = 'zone_topic';

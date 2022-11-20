@@ -1,15 +1,14 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:sixam_mart_store/util/dimensions.dart';
-import 'package:sixam_mart_store/util/images.dart';
-import 'package:sixam_mart_store/util/styles.dart';
-import 'package:sixam_mart_store/view/base/custom_button.dart';
+import 'package:aloo_store/util/dimensions.dart';
+import 'package:aloo_store/util/images.dart';
+import 'package:aloo_store/util/styles.dart';
+import 'package:aloo_store/view/base/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NewRequestDialog extends StatefulWidget {
-
   @override
   State<NewRequestDialog> createState() => _NewRequestDialogState();
 }
@@ -42,22 +41,23 @@ class _NewRequestDialogState extends State<NewRequestDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
       //insetPadding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
       child: Padding(
         padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-
-          Image.asset(Images.notification_in, height: 60, color: Theme.of(context).primaryColor),
-
+          Image.asset(Images.notification_in,
+              height: 60, color: Theme.of(context).primaryColor),
           Padding(
             padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
             child: Text(
-              'new_order_placed'.tr, textAlign: TextAlign.center,
-              style: robotoRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
+              'new_order_placed'.tr,
+              textAlign: TextAlign.center,
+              style:
+                  robotoRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
             ),
           ),
-
           CustomButton(
             height: 40,
             buttonText: 'ok'.tr,
@@ -66,7 +66,6 @@ class _NewRequestDialogState extends State<NewRequestDialog> {
               Get.back();
             },
           ),
-
         ]),
       ),
     );
